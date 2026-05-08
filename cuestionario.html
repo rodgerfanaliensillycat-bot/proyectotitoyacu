@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Cuestionario</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+
+.fade-in{
+animation:fadeIn .4s;
+}
+
+@keyframes fadeIn{
+from{opacity:0;}
+to{opacity:1;}
+}
+
+</style>
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+
+<div class="card shadow">
+
+<div class="card-header bg-primary text-white text-center">
+<h3>Cuestionario de Cultura General</h3>
+</div>
+
+<div class="card-body text-center">
+
+<div id="quiz"></div>
+
+<div id="resultado" class="mt-4"></div>
+
+</div>
+</div>
+</div>
+
+<script>
+
+const preguntas = [
+{p:"¿Capital de Francia?",r:["Madrid","París","Roma"],c:1},
+{p:"¿Quién pintó la Mona Lisa?",r:["Da Vinci","Picasso","Van Gogh"],c:0},
+{p:"¿Planeta más grande del sistema solar?",r:["Tierra","Júpiter","Marte"],c:1},
+{p:"¿Año llegada a la Luna?",r:["1969","1955","1975"],c:0},
+{p:"¿Elemento químico H?",r:["Helio","Hidrógeno","Hierro"],c:1}
+];
+
+let actual=0;
+let puntos=0;
+
+function mostrarPregunta(){
+
+const q=preguntas[actual];
+
+let html=`
+<div class="fade-in">
+<h5>Pregunta ${actual+1} de ${preguntas.length}</h5>
+<p class="fs-4">${q.p}</p>
+`;
+
+q.r.forEach((op,i)=>{
+
+html+=`
+<button class="btn btn-outline-primary m-2"
+onclick="responder(${i})">
+${op}
+</button>
+`;
+
+});
+
+html+=`</div>`;
+
+document.getElementById("quiz").innerHTML=html;
+}
+
+function responder(i){
+
+if(i===preguntas[actual].c){
+puntos++;
+}
+
+actual++;
+
+if(actual<preguntas.length){
+mostrarPregunta();
+}else{
+mostrarResultado();
+}
+}
+
+function mostrarResultado(){
+
+let porcentaje=
+Math.round((puntos/preguntas.length)*100);
+
+Swal.fire({
+title:"🎉 Resultado",
+text:`Obtuviste ${porcentaje}%`,
+icon:"success"
+});
+
+document.getElementById("quiz").innerHTML="";
+
+document.getElementById("resultado").innerHTML=`
+<div class="alert alert-success">
+<h3>Puntaje final</h3>
+<p>${puntos}/${preguntas.length}</p>
+<p>${porcentaje}%</p>
+</div>
+`;
+}
+
+mostrarPregunta();
+
+</script>
+
+</body>
+</html>
